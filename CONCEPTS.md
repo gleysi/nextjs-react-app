@@ -1,11 +1,18 @@
-# NodeJS & React
+- [NextJS & React](#nextjs-&-react)
+  - [The Core Definition](#the-core-definition)
+  - [React vs. Next.js: Library or Framework?](#react-vs-nextjs-library-or-framework)
+  - [Next.js Reserved Filenames (App Router)](#nextjs-reserved-filenames-app-router-)
+    - [🛠️ Reserved Filenames Reference](#reserved-filenames-reference)
+    - [💡 Visualizing the Hierarchy](#-visualizing-the-hierarchy)
+
+# NextJS & React
 
 ## The Core Definition
 
 * **React** is a UI **library**. It handles the "view" layer but leaves decisions like routing and rendering strategies up to the developer. A JavaScript library for building user interfaces. It´s a client-side library.
 * **Next.js** is a **framework** built on top of React. It comes with "opinions" and pre-configured tools to automatically solve common problems like performance, image optimization, and SEO.
 
-# React vs. Next.js: Library or Framework?
+## React vs. Next.js: Library or Framework?
 
 | Feature | React (Library) | Next.js (Framework) |
 | :--- | :--- | :--- |
@@ -15,7 +22,7 @@
 | **SEO** 🔍 | **Harder.** Search engines see an "empty" page before JavaScript runs. | **Excellent.** Search engines see the full content immediately. |
 | **Backend** ⚙️ | Needs a separate backend (Node, Python, etc.) for APIs. | **Full-stack:** You can write backend API routes directly inside the project. |
 
-# Next.js Reserved Filenames (App Router) 📁
+## Next.js Reserved Filenames (App Router) 📁
 
 When working inside the `app/` directory (or any of its subfolders), Next.js uses a set of **reserved filenames**. These files have special meanings and define how your routes, UI, and error states behave.
 
