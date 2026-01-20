@@ -1,6 +1,16 @@
 - [Routing & File-Based Structure](#1-routing--file-based-structure)
+    - [Reserved File Names](https://github.com/gleysi/nextjs-react-app/blob/main/ROUTING.md#reserved-file-names)
+    - [Advanced Routing Patterns](https://github.com/gleysi/nextjs-react-app/blob/main/ROUTING.md#advanced-routing-patterns)
+        - Dynamic Routes
+        - Route Groups
+        - Parallel Routes
+        - Intercepting Routes
 - [Component Architecture](#2-component-architecture)
+    - [Server vs. Client Components](https://github.com/gleysi/nextjs-react-app/blob/main/ROUTING.md#server-vs-client-components) 
 - [Data Fetching & Caching](#3-data-fetching--caching)
+    - [Caching and Streaming](https://github.com/gleysi/nextjs-react-app/blob/main/ROUTING.md#caching-and-streaming)
+        - fetch
+        - suspense 
 - [Data Mutation (Server Actions)](#4-data-mutation-server-actions)
     - [1. The Server Action (lib/actions.js)](#1-the-server-action-libactionsjs)
     - [The Form Component (Using Hooks)](#2-the-form-component-using-hooks)
