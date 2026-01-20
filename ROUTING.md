@@ -2,6 +2,10 @@
 - [Component Architecture](#2-component-architecture)
 - [Data Fetching & Caching](#3-data-fetching--caching)
 - [Data Mutation (Server Actions)](#4-data-mutation-server-actions)
+    - [1. The Server Action (lib/actions.js)](#1-the-server-action-libactionsjs)
+    - [The Form Component (Using Hooks)](#2-the-form-component-using-hooks)
+    - [Core Hooks for Actions useFormStatus, useActionState](#core-hooks-for-actions)
+    - [How Data Mutation Works here:](#how-data-mutation-works-here)
 
 ## 1. Routing & File-Based Structure
 Next.js uses a directory-based router where folders define the URL segments.
