@@ -1,6 +1,7 @@
 - [Routing & File-Based Structure](#1-routing--file-based-structure)
 - [Component Architecture](#2-component-architecture)
 - [Data Fetching & Caching](#3-data-fetching--caching)
+- [Data Mutation (Server Actions)](#4-data-mutation-server-actions)
 
 ## 1. Routing & File-Based Structure
 Next.js uses a directory-based router where folders define the URL segments.
@@ -138,3 +139,108 @@ export default function Page() {
   );
 }
 ```
+## 4. Data Mutation (Server Actions)
+
+**Data Mutation** refers to the process of changing data on the server (Creating, Updating, or Deleting) and then updating the UI to reflect those changes.
+
+S**erver Actions** are the bridge. They allow you to write a function that runs on the server but can be called directly from your client-side form.
+
+### 1. The Server Action (`lib/actions.js`)
+This is where the actual mutation happens. We use useActionState to handle the response from this function.
+
+```typescript
+'use server'
+import { saveMeal } from './meals';
+import { revalidatePath } from 'next/cache';
+
+export async function shareMeal(prevState, formData) {
+  const meal = {
+    title: formData.get('title'),
+    creator: formData.get('name'),
+  };
+
+  // Validation logic
+  if (!meal.title || meal.title.length < 5) {
+    return { message: 'Invalid title. Must be at least 5 characters.' };
+  }
+
+  try {
+    await saveMeal(meal);
+    // Tell Next.js to clear the cache and fetch fresh data
+    revalidatePath('/meals'); 
+    return { message: 'Success!' };
+  } catch (error) {
+    return { message: 'Database error occurred.' };
+  }
+}
+```
+
+### 2. The Form Component (Using Hooks)
+To use `useActionState` and `useFormStatus`, your component must be a **Client Component.**
+
+**A. The Submit Button** (`components/submit-button.js`)
+
+`useFormStatus` only works if it is called in a component inside a `<form>`. We usually split the button into its own small component.
+
+```typescript
+'use client'
+import { useFormStatus } from 'react-dom';
+
+export function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Submitting...' : 'Share Meal'}
+    </button>
+  );
+}
+```
+
+**B. The Main Form** (`app/meals/share/page.js`)
+
+`useActionState` (formerly `useFormState`) tracks the result of the action (like error messages) and the loading state.
+
+```typescript
+'use client'
+import { useActionState } from 'react';
+import { shareMeal } from '@/lib/actions';
+import { SubmitButton } from '@/components/submit-button';
+
+export default function ShareMealPage() {
+  // state: the object returned from the action
+  // formAction: the enhanced function to put in your form's action prop
+  const [state, formAction] = useActionState(shareMeal, { message: null });
+
+  return (
+    <form action={formAction}>
+      <p>
+        <label htmlFor="name">Your Name</label>
+        <input type="text" id="name" name="name" required />
+      </p>
+      <p>
+        <label htmlFor="title">Meal Title</label>
+        <input type="text" id="title" name="title" required />
+      </p>
+
+      {/* Display error/success messages from the server */}
+      {state.message && <p className="status">{state.message}</p>}
+
+      <SubmitButton />
+    </form>
+  );
+}
+```
+
+### Core Hooks for Actions
+* **`useFormStatus`**: Provides the pending state of a form submission (e.g., `pending: true`). **Note:** This must be used in a component that is a **child** of the `<form>` element.
+* **`useActionState`** (formerly `useFormState`): Used to handle the state returned from the server, such as validation errors, success messages, or the previous form data.
+
+### How Data Mutation Works here:
+1. **User submits**: `useFormStatus` sets `pending` to true, disabling the button.
+
+2. **Action runs:** The `shareMeal` function executes on the server, talking to your database.
+
+3. **Revalidation:** `revalidatePath` tells Next.js the data has changed, so the list of meals is updated.
+
+4. **State update:** The server returns a message, and `useActionState` updates the UI with the result.
