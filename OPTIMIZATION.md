@@ -1,3 +1,5 @@
+- [Optimizations & Images](#optimizations--images)
+- [The Middleware Protection](#the-middleware-protection)
 ## Optimizations & Images
 
 The `<Image />` component optimizes performance by lazy loading and resizing images.
@@ -28,5 +30,19 @@ export default function HeroImage() {
       />
     </div>
   )
+}
+```
+## The Middleware Protection
+
+NextAuth makes protecting routes very simple. In your `middleware.js` file, you can export the `auth` function to gatekeep your app
+
+File: `middleware.js`
+
+```js
+export { auth as middleware } from "@/auth"
+
+// Define which routes require being logged in
+export const config = {
+  matcher: ["/meals/share/:path*", "/admin/:path*"],
 }
 ```
