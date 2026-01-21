@@ -4,6 +4,7 @@
   - [Next.js Reserved Filenames (App Router)](#nextjs-reserved-filenames-app-router-)
     - [🛠️ Reserved Filenames Reference](#%EF%B8%8F-reserved-filenames-reference)
     - [💡 Visualizing the Hierarchy](#-visualizing-the-hierarchy)
+  - [Metadata](#metadata)
 
 # NextJS & React
 
@@ -47,7 +48,93 @@ When working inside the `app/` directory (or any of its subfolders), Next.js use
 
 Next.js uses a nested folder structure to determine how these files wrap around your content. For a single route, the UI is organized in this specific order:
 
+## Metadata
 
+In Next.js, metadata is used to define the `<head>` elements of your page (like `title`, `description`, and Open Graph tags for social media). You can define it **statically** for fixed pages or **dynamically** for pages that depend on data (like a blog post).
+
+### 1. Static Metadata
+For pages where the content doesn't change based on parameters, you export a `metadata` object.
+
+```js
+// app/about/page.tsx
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Us | My Next.js App',
+  description: 'Learn more about our team and mission.',
+};
+
+export default function AboutPage() {
+  return <h1>About Us</h1>;
+}
+```
+
+### 2. Dynamic Metadata
+For dynamic routes (e.g., `app/posts/[id]/page.tsx`), you use the `generateMetadata` function. This allows you to fetch data before the page renders to set the title and description specifically for that item.
+
+```js
+// app/posts/[slug]/page.tsx
+import { Metadata } from 'next';
+import { getPostBySlug } from '@/lib/posts';
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+// Next.js will call this function automatically
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) {
+    return { title: 'Post Not Found' };
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      images: [post.coverImage],
+    },
+  };
+}
+
+export default async function PostPage({ params }: Props) {
+  const { slug } = await params;
+  // ... render post content
+}
+````
+
+### 3. Layout Metadata (The Template)
+You can define a "base" metadata in your root `layout.tsx` This can include a `title.template` which automatically appends your site name to every sub-page title.
+
+```js
+// app/layout.tsx
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | My Brand Name', // The %s is replaced by the page title
+    default: 'Welcome to My Brand Name', // Used if a page has no title
+  },
+  description: 'The best app for learning Next.js',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+#### Key Rules for Metadata
+- **Server Side Only:** Metadata can only be exported from **Server Components.** You cannot use it in a file that has `"use client"` at the top.
+
+- **Ordering:** Next.js starts at the page and moves up to the root layout. It merges the metadata, with the page-level metadata overriding the layout-level metadata if they share the same keys.
+
+- **No Manual Tags:** Avoid using `<head>` or `<meta>` tags manually in your TSX/JSX; the Metadata API handles performance optimizations (like deduplication) for you.
 
 1.  **`layout.js`** (The outermost wrapper)
 2.  **`error.js`** (React Error Boundary)
