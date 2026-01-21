@@ -1,4 +1,9 @@
-- [Sources](#sources)
+- [Authentication](https://github.com/gleysi/nextjs-react-app/blob/main/AUTHENTICATION.md#authentication)
+  - [1. The Action: Logging In](https://github.com/gleysi/nextjs-react-app/blob/main/AUTHENTICATION.md#1-the-action-logging-in)
+  - [2. The Configuration (lib/auth.ts)](https://github.com/gleysi/nextjs-react-app/blob/main/AUTHENTICATION.md#2-the-configuration-libauthts)
+  - [3. Checking the Session (UI)](https://github.com/gleysi/nextjs-react-app/blob/main/AUTHENTICATION.md#3-checking-the-session-ui)
+  - [4. Database Helper (lib/user.js)](https://github.com/gleysi/nextjs-react-app/blob/main/AUTHENTICATION.md#4-database-helper-libuserjs)
+  - [Sources](#sources)
 
 # Authentication
 
